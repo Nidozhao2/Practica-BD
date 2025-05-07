@@ -62,7 +62,7 @@ create table empleats(
 create table ordinaris(
     num_pass int(3),
 
-    constraint pk_ordinaris (num_pass),
+    constraint pk_ordinaris primary key (num_pass),
     constraint fk_empleats foreign key (num_pass) references empleats(num_pass)
 )engine=innodb;
 
@@ -74,7 +74,7 @@ create table qualificats(
 
 
 
-    constraint pk_ordinaris (num_pass),
+    constraint pk_ordinaris primary key (num_pass),
     constraint fk_empleats foreign key (num_pass) references empleats(num_pass),
     constraint fk_zona_assignada foreign key (zona_assignada,lab) references zona_biocontencio(codi,codiLab)
 )engine=innodb;
@@ -86,6 +86,8 @@ create table assignacions(
     lab int(6) not null,
     datafi date null,
 
-    
+    constraint pk_assignacions primary key (data,empl_ord),
+    constraint fk_ordinari foreign key (empl_ord) references ordinaris(num_pass),
+    constraint fk_zona_lab foreign key (zona,lab) references zona_biocontencio(codi,codiLab)
 
 )engine=innodb;
