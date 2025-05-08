@@ -1,4 +1,4 @@
-drop database ARMES_BIO;
+drop database if exists ARMES_BIO;
 create database ARMES_BIO;
 use ARMES_BIO;
 
@@ -8,33 +8,32 @@ use ARMES_BIO;
 create table paisos(
     nom varchar(40) not null,
     pot_desenv int(1) not null,
-    tractat_signat boolean,
+    tractat_signat boolean not null,
     constraint pk_paisos primary key (nom)
-)engine=innodb;
+)engine=InnoDB;
 
-insert into paisos(nom,pot_desenv,tractat_signat) values ('ANDORRA', 4, true);
-insert into paisos(nom,pot_desenv,tractat_signat) values ('ESPANYA', 3, true);
+-- insert into paisos(nom,pot_desenv,tractat_signat) values ('ANDORRA', 4, true);
+-- insert into paisos(nom,pot_desenv,tractat_signat) values ('ESPANYA', 3, true);
 
 create table empleats(
     num_pass int(3),
-    nom_empleats varchar(40),
-
+    nom_empleats varchar(40) not null,
     constraint pk_empleats primary key (num_pass)
 
 )engine=innodb;
 
 
 create table ordinaris(
-    num_pass_ordinaris int(3),
+    num_pass int(3),
 
-    constraint pk_ordinaris primary key (num_pass_ordinaris),
-    constraint fk_empleats_ord foreign key (num_pass_ordinaris) references empleats(num_pass)
+    constraint pk_ordinaris primary key (num_pass),
+    constraint fk_empleats_ord foreign key (num_pass) references empleats(num_pass)
 )engine=innodb;
 
 create table laboratoris(
     codi_laboratoris int(6),
     nom_laboratoris varchar(40), 
-    pais varchar(40),
+    pais varchar(40) not null,
     constraint pk_laboratoris primary key (codi_laboratoris),
     constraint fk_laboratoris_paisos foreign key (pais) references paisos(nom)
 )engine=innodb;
@@ -43,26 +42,22 @@ create table laboratoris(
 -- insert into laboratoris(codi_laboratoris,nom_laboratoris,pais) values (2,'MAT-YYY','ANDORRA');
 -- insert into laboratoris(codi_laboratoris,nom_laboratoris,pais) values (3,'MAD-AAA','ESPANYA');
  
-create table qualificats(
-    num_pass_qual int(3),
-    titulacio varchar(40),
-    zona_assignada int(2),
+create table qualificats (
+    num_pass int(3),
+    titulacio varchar(40) not null,
+    zona_assignada int(2) not null,
     lab int(6),
-
-
-
-    constraint pk_qualificats primary key (num_pass_qual),
-    constraint fk_empleats_qual foreign key (num_pass_qual) references empleats(num_pass),
+    constraint pk_qualificats primary key (num_pass),
+    constraint fk_empleats_qual foreign key (num_pass) references empleats(num_pass),
     
-)engine=innodb;
+)ENGINE=InnoDB;
 
 
 create table zona_biocontencio(
     codi int(2),
-    codiLab int(6) ,
-    nivell varchar(1),
-    responsable int(3) ,
-
+    codiLab int(6),
+    nivell varchar(1) not null,
+    responsable int(3) not null,
     constraint pk_zona_biocontencio primary key (codi, codiLab),
     constraint fk_codiLab foreign key (codiLab) references laboratoris(codi_laboratoris),
     constraint fk_responsable foreign key (responsable) references qualificats(num_pass)
@@ -70,7 +65,9 @@ create table zona_biocontencio(
 )engine=innodb;
 
 
-
+ALTER TABLE qualificats
+ADD CONSTRAINT fk_qualificats_zona
+foreign key (zona_assignada, lab) references zona_biocontencio(codi, codiLab);
 
 
 
@@ -80,16 +77,12 @@ create table zona_biocontencio(
 
 
 
--- Now alter qualificats to add the foreign key to zona_biocontencio
-ALTER TABLE qualificats
-ADD CONSTRAINT fk_qualificats_zona
-foreign key (zona_assignada, lab) references zona_biocontencio(codi, codiLab);
 
 
 create table armes_biologiques(
     nom_armes_biol varchar(40),
     data date,
-    potencial int(1),
+    potencial int(1) not null,
     zona int(2) not null,
     lab int(6) not null,
 
@@ -110,7 +103,7 @@ create table assignacions(
     datafi date,
 
     constraint pk_assignacions primary key (data,empl_ord),
-    constraint fk_ordinari foreign key (empl_ord) references ordinaris(num_pass_ordinaris),
+    constraint fk_ordinari foreign key (empl_ord) references ordinaris(num_pass),
     constraint fk_zona_lab_assignacions foreign key (zona_assignacions,lab_assignacions) references zona_biocontencio(codi,codiLab)
 
 )engine=innodb;
