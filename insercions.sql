@@ -40,3 +40,19 @@ insert into assignacions(data,empl_ord,zona_assignacions,lab_assignacions,datafi
 insert into qualificats(num_pass,titulacio,zona_assignada,lab) values ('22222L','ENG. QUIMIC',1,1);
 insert into qualificats(num_pass,titulacio,zona_assignada,lab) values ('33333M','ENG. QUIMIC',1,1);
 insert into qualificats(num_pass,titulacio,zona_assignada,lab) values ('44444B','ENG. QUIMIC',1,1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
