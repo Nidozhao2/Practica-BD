@@ -1,5 +1,9 @@
 -- 1ra consulta
-select nom_laboratoris,codi_laboratoris from laboratoris where (select codiLab from zona_biocontencio where nivell = 'A' and codiLab = codi_laboratoris);
+select nom_laboratoris,codi_laboratoris from laboratoris 
+where (select codiLab from zona_biocontencio 
+    where nivell = 'A' and codiLab = codi_laboratoris)
+    
+order by nom_laboratoris;
 
 -- 2na consulta
 
@@ -16,8 +20,6 @@ join laboratoris on (codiLab = codi_laboratoris)
 group by codi, nom_laboratoris having count(*) >= 3 order by nom_laboratoris, codi;
 
 -- 4ta consulta
- Obtenir quins empleats ordinaris han estat en totes les zones de biocontenció
-del laboratori que té per nom ‘BCN-XXX
 
 select ordinaris.num_pass,nom_empleats from ordinaris join empleats on ordinaris.num_pass = empleats.num_pass 
 where not exists (select codi, codiLab from zona_biocontencio 
@@ -40,23 +42,22 @@ having count(distinct zona_assignacions, lab_assignacions)> (
 order by num_zones desc;
 
 
+--View
 
-CREATE VIEW EmpleatsPerZona AS
-SELECT DISTINCT e.num_pass, e.nom_empleats, t.zona
-FROM empleats e
-JOIN (
-    -- Empleats ordinaris assignats a zones
-    SELECT a.empl_ord AS num_pass, a.zona_assignacions AS zona
-    FROM assignacions a
+drop view if exists EmpleatsPerZona;
+create view EmpleatsPerZona as
+select distinct empleats.num_pass, empleats.nom_empleats, t.zona
+from empleats
+join(
+    select assignacions.empl_ord as num_pass, assignacions.zona_assignacions as zona
+    from assignacions where datafi is null
 
-    UNION
+    union
 
-    -- Responsables de zona (1 per zona)
-    SELECT z.responsable AS num_pass, z.codi AS zona
-    FROM zona_biocontencio z
-) AS t
-ON e.num_pass = t.num_pass;
-
+    select zona_biocontencio.responsable as num_pass, zona_biocontencio.codi as zona
+    from zona_biocontencio
+) as t 
+on empleats.num_pass = t.num_pass ;
 
 
 

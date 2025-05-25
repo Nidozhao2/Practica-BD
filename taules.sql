@@ -77,3 +77,5 @@ create table assignacions(
 
 
 
+source insercions.sql;
+source consultes.sql;
