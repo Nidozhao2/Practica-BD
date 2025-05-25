@@ -1,31 +1,31 @@
 -- -- si un pais no desenvolupa no formarà part de la BD
 
-drop trigger if exists potencial_arma;
-delimiter //
-create trigger potencial_arma
-after insert on armes_biologiques
-for each row 
-begin
-    if armes_biologiques.potencial > 5 then
-        update zona_biocontencio 
-        set nivell = 'A'
-        where codi = armes_biologiques.zona;
-    end if;
-end;
-//
-delimiter ;
+-- drop trigger if exists potencial_arma;
+-- delimiter //
+-- create trigger potencial_arma
+-- after insert on armes_biologiques
+-- for each row 
+-- begin
+--     if armes_biologiques.potencial > 5 then
+--         update zona_biocontencio 
+--         set nivell = 'A'
+--         where codi = armes_biologiques.zona;
+--     end if;
+-- end;
+-- //
+-- delimiter ;
 
-if responsable from zona_biocontencio is null then
-    set responsable = null for each row;
-end if;
+-- if responsable from zona_biocontencio is null then
+--     set responsable = null for each row;
+-- end if;
 
-drop trigger if exists destitucio;
-delimiter //
-create trigger destitucio
-update on zona_biocontencio
-for each row
-//
-delimiter ;
+-- drop trigger if exists destitucio;
+-- delimiter //
+-- create trigger destitucio
+-- update on zona_biocontencio
+-- for each row
+-- //
+-- delimiter ;
 
 
 

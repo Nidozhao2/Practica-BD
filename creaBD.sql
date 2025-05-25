@@ -76,6 +76,3 @@ create table assignacions(
 )engine=innodb;
 
 
-
-source insercions.sql;
-source consultes.sql;
